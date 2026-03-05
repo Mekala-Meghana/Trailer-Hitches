@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Towing & Cargo Equipment Configuratorn</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <nav class="navbar">
+      <a href="index.html" class="logo-link">
+        <img src="logo.png" alt="Company Logo" class="logo" />
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <button class="nav-close-btn" onclick="hideMenu()">
+          <i class="fa fa-times"></i>
+        </button>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#customer-details">Customer Details</a></li>
+          <li><a href="#Towing & Cargos">Towing & Cargos</a></li>
+        </ul>
+      </div>
+
+      <button class="nav-open-btn" onclick="showMenu()">
+        <i class="fa fa-bars"></i>
+      </button>
+    </nav>
+
+    <div class="text-box">
+      <h1>Towing & Cargo Equipment Configurator</h1>
+      <p>
+        We specialize in configuring essential towing and cargo equipment to ensure safe, reliable transport and maximum utility.
+        Our solutions include hitch and towing systems, cargo carriers, bike racks,<br />
+        wiring and electrical kits, recovery accessories, and cargo management 
+        solutions designed to support a wide range of vehicles and transport needs.
+      </p>
+      <a href="#customer-details" class="hero-btn">Start Configuration</a>
+    </div>
+  </header>
+
+  <!-- Customer Details -->
+  <section class="CustomerDetails" id="customer-details">
+    <h1>Customer Details</h1>
+    <p>Enter the Details before starting your configuration!</p>
+
+    <form class="form" id="customerForm">
+      <label for="cname">Customer Name:</label>
+      <input type="text" id="cname" placeholder="Enter Customer Name Here" required />
+
+      <label for="cemail">Customer Email:</label>
+      <input type="email" id="cemail" placeholder="Enter Customer Email Here" required />
+
+      <label for="cphn">Customer Mobile No:</label>
+      <input type="tel" id="cphn" placeholder="Enter Customer Mobile No Here" required />
+
+      <label for="dealer">Dealers/Sales:</label>
+      <input type="text" id="dealer" placeholder="Enter Dealers/Sales Here" required />
+
+      <button type="submit">Start configuration</button>
+    </form>
+  </section>
+
+  <!-- Equipments -->
+  <section class="Equip" id="Towing & Cargos" tabindex="-1">
+    <h1>Towing & Cargos</h1>
+    <p>
+      We provide and configure essential towing and cargo solutions such as hitch systems, tow bars, 
+      cargo carriers, bike racks, and electrical wiring kits to optimize vehicle capability, load safety, and transport efficiency.
+    </p>
+
+    <div class="row">
+      <article class="Equip-col">
+        <a href="#" class="equip-link" data-href="Hitch.html">
+          <img src="Hitch.jpg" alt="Trailer Hitches" />
+          <div class="layer"><h3>TRAILER HITCHES</h3></div>
+        </a>
+      </article>
+
+      <article class="Equip-col">
+        <a href="#" class="equip-link" data-href="5th Wheel.html">
+          <img src="5th wheel.jpg" alt="5th Wheel Hitches" />
+          <div class="layer"><h3>5th WHEEL HITCHES</h3></div>
+        </a>
+      </article>
+
+      <article class="Equip-col">
+        <a href="#" class="equip-link" data-href="Gooseneck.html">
+          <img src="Gooseneck-Hitch.jpg" alt="Gooseneck Hitch" />
+          <div class="layer"><h3>GOOSENECK HITCHES</h3></div>
+        </a>
+      </article>
+
+      <article class="Equip-col">
+        <a href="#" class="equip-link" data-href="Towing.html">
+          <img src="Towing-Accessories.jpg" alt="Towing Accessories" />
+          <div class="layer"><h3>TOWING ACCESSORIES</h3></div>
+        </a>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- JS Logic -->
+  <script>
+    // Navigation toggle
+const navLinks = document.getElementById("navLinks");
+
+function showMenu() {
+    navLinks.style.right = "0";
+}
+
+function hideMenu() {
+    navLinks.style.right = "-250px";
+}
+
+document.addEventListener("click", (e) => {
+    if (!navLinks.contains(e.target) && !document.querySelector(".nav-open-btn").contains(e.target)) {
+        hideMenu();
+    }
+});
+
+
+// Save form data
+document.getElementById("customerForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById("cname").value.trim();
+    const email = document.getElementById("cemail").value.trim();
+    const phone = document.getElementById("cphn").value.trim();
+    const dealer = document.getElementById("dealer").value.trim();
+
+    if (name && email && phone && dealer) {
+        const customerDetails = { name, email, phone, dealer };
+        sessionStorage.setItem("customerDetails", JSON.stringify(customerDetails));
+        alert("✅ Customer details saved! Now you can start configuration.");
+    } else {
+        alert("❌ Please fill all fields before proceeding.");
+    }
+});
+
+// Click handler for equipment cards
+document.querySelectorAll(".equip-link").forEach(link => {
+    link.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById("cname").value.trim();
+        const email = document.getElementById("cemail").value.trim();
+        const phone = document.getElementById("cphn").value.trim();
+        const dealer = document.getElementById("dealer").value.trim();
+
+        if (name && email && phone && dealer) {
+            window.location.href = this.dataset.href;
+        } else {
+            alert("⚠️ Please enter your customer details before starting configuration.");
+            window.location.href = "#Towing & Cargos"; // after alert
+        }
+    });
+});
+</script>
+
+
+</body>
+</html>

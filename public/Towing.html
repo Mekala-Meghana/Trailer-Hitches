@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Towing Accessories</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: #003366;
+      color: white;
+      padding: 15px;
+      font-size: 22px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    /* Center container */
+    #main-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* UI card */
+    #controls {
+      width: 420px;
+      background-color: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    select {
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-top: 4px;
+      background-color: #f9f9f9;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 100%;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #00509e;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 400px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .close-btn {
+      float: right;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-toggle {
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.btn-toggle button {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  cursor: pointer;
+  background: #eee;
+  font-weight: bold;
+}
+
+.btn-toggle button.active {
+  background: #003366;
+  color: white;
+}
+
+  </style>
+</head>
+
+<body>
+<header>TOWING ACCESSORIES</header>
+
+<div id="main-container">
+  <div id="controls">
+    <label>Hitch Type
+      <select id="Hitchtype">
+        <option selected>Trailer Hitches</option>
+        <option>5th Wheel Hitches</option>
+        <option>Gooseneck Hitches</option>
+      </select>
+    </label>
+
+    <label>Hardware
+      <select id="Hardware">
+        <option>Pin</option>
+        <option selected>Fasteners</option>
+      </select>
+    </label>
+
+    <label>Electrical Systems</label>
+<div class="btn-toggle">
+  <button type="button" class="active" onclick="setValue(this, 'Yes')">Yes</button>
+  <button type="button" onclick="setValue(this, 'No')">No</button>
+</div>
+<input type="hidden" id="Electrical" value="Yes">
+
+
+    <label>Safety Kits</label>
+<div class="btn-toggle">
+  <button type="button" class="active" onclick="setValue(this, 'Yes')">Yes</button>
+  <button type="button" onclick="setValue(this, 'No')">No</button>
+</div>
+<input type="hidden" id="Safetykits" value="Yes">
+
+
+    <label>Covers</label>
+<div class="btn-toggle">
+  <button type="button" class="active" onclick="setValue(this, 'Yes')">Yes</button>
+  <button type="button" onclick="setValue(this, 'No')">No</button>
+</div>
+<input type="hidden" id="Covers" value="Yes">
+
+    <label>Wheel Chocks</label>
+<div class="btn-toggle">
+  <button type="button" class="active" onclick="setValue(this, 'Yes')">Yes</button>
+  <button type="button" onclick="setValue(this, 'No')">No</button>
+</div>
+<input type="hidden" id="Wheelchocks" value="Yes">
+
+    <label>Extended Mirrors</label>
+<div class="btn-toggle">
+  <button type="button" class="active" onclick="setValue(this, 'Yes')">Yes</button>
+  <button type="button" onclick="setValue(this, 'No')">No</button>
+</div>
+<input type="hidden" id="Extendedmirrors" value="Yes">
+
+    <button id="showSummaryBtn">Summary</button>
+  </div>
+</div>
+
+<!-- Summary Modal -->
+<div id="summaryModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" id="closeSummary">&times;</span>
+    <h3>Configuration Summary</h3>
+    <div id="summaryContent"></div>
+    <p style="font-size:14px; color:#555; margin-top:10px;">
+      Please click the button below to send the quote to your email
+    </p>
+    <button id="generateQuoteBtn">Generate Quote</button>
+  </div>
+</div>
+
+<!-- Loading Modal -->
+<div id="loadingModal" class="modal">
+  <div class="modal-content" style="text-align:center; width:300px;">
+    <p style="font-size:16px; font-weight:bold;">⏳ Please wait...</p>
+    <p>Your quote is being sent.</p>
+  </div>
+</div>
+
+<script>
+  document.getElementById('showSummaryBtn').onclick = () => {
+    const customer = JSON.parse(sessionStorage.getItem("customerDetails"));
+    if (!customer) {
+      alert("Customer details missing");
+      return;
+    }
+
+    const summary = `
+      <p><strong>Name:</strong> ${customer.name}</p>
+      <p><strong>Email:</strong> ${customer.email}</p>
+      <p><strong>Phone:</strong> ${customer.phone}</p>
+      <p><strong>Dealer:</strong> ${customer.dealer}</p>
+      <p><strong>Hitch Type:</strong> ${Hitchtype.value}</p>
+      <p><strong>Hardware:</strong> ${Hardware.value}</p>
+      <p><strong>Electrical:</strong> ${Electrical.value}</p>
+      <p><strong>Safety Kits:</strong> ${Safetykits.value}</p>
+      <p><strong>Covers:</strong> ${Covers.value}</p>
+      <p><strong>Wheel Chocks:</strong> ${Wheelchocks.value}</p>
+      <p><strong>Extended Mirrors:</strong> ${Extendedmirrors.value}</p>
+    `;
+
+    summaryContent.innerHTML = summary;
+    summaryModal.style.display = "block";
+  };
+
+  closeSummary.onclick = () => summaryModal.style.display = "none";
+
+   document.getElementById('generateQuoteBtn').addEventListener('click', function () {
+      const customerDetails = JSON.parse(sessionStorage.getItem("customerDetails"));
+      const configuration = {
+        Hitchtype: document.getElementById("Hitchtype").value,
+        Hardware: document.getElementById("Hardware").value,
+        Electrical: document.getElementById("Electrical").value,
+        Safetykits: document.getElementById("Safetykits").value,
+        Covers: document.getElementById("Covers").value,
+        Wheelchocks: document.getElementById("Wheelchocks").value,
+        Extendedmirrors: document.getElementById("Extendedmirrors").value,
+      };
+      document.getElementById('summaryModal').style.display = 'none';
+      document.getElementById('loadingModal').style.display = 'block';
+      fetch("/api/send-quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ customer: customerDetails, configuration, productType: "Towing Accessories" })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('loadingModal').style.display = 'none';
+        alert("✅ Quote sent!");
+        document.getElementById('summaryModal').style.display = 'none';
+      })
+      .catch(err => {
+        document.getElementById('loadingModal').style.display = 'none';
+        console.error(err);
+        alert("❌ Failed to send quote.");
+      });
+    });
+
+
+  function setValue(btn, value) {
+  const container = btn.parentElement;
+  container.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  container.nextElementSibling.value = value;
+}
+
+</script>
+
+</body>
+</html>

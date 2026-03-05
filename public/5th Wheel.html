@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>5th Wheel Hitches</title>
+  <script src="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/viewer3D.min.js"></script>
+  <link rel="stylesheet" href="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/style.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+    }
+    header { background-color: #003366; color: white; padding: 15px; font-size: 22px; text-align: center; font-weight: bold; }
+    #main-container { display: flex; height: calc(100vh - 60px); }
+    #controls {  flex: 0 0 400px; background-color: #fff; padding: 20px; box-shadow: 2px 0 8px rgba(0,0,0,0.1); overflow-y: auto; }
+    #forgeViewer { flex: 1; position: absolute; left: 23%; top:30px; width: 74vw; height: 93vh; margin-top: 30px; border: 1px solid #ccc; }
+    label { display: flex; flex-direction: column; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 15px; }
+    select, input { padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; margin-top: 4px; background-color: #f9f9f9; }
+    button { margin-top: 10px; padding: 10px; width: 100%; background-color: #003366; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+    button:hover { background-color: #00509e; }
+
+    /* Modal background */
+    .modal {
+      display: none; 
+      position: fixed; 
+      z-index: 1000; 
+      left: 0;
+      top: 0;
+      width: 100%; 
+      height: 100%; 
+      overflow: auto; 
+      background-color: rgba(0,0,0,0.5);
+    }
+    /* Modal content */
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto; 
+      padding: 20px;
+      border-radius: 8px;
+      width: 400px; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .close-btn {
+      float: right;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #loadingModal .modal-content {
+  width: 300px;
+}
+#viewerMessage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 20px 25px;
+  border-radius: 8px;
+  font-size: 15px;
+  text-align: center;
+
+  max-width: 60%;
+  box-sizing: border-box;
+
+  z-index: 10;
+  pointer-events: none;   /* 🔥 prevents scroll trigger */
+}
+
+  </style>
+</head>
+<body>
+  <header>5TH WHEEL HITCHES</header>
+  <div id="main-container">
+    <div id="controls">
+      <label>Load Rating: 
+        <select id="Loadrating"><option value="16K" selected>16K</option><option value="20K">20K</option><option value="24K">24K</option><option value="25K">25K</option><option value="30K">30K</option></select>
+      </label>
+      <label>Type: 
+        <select id="Type"><option value="Sliding">Sliding</option><option value="Stationary" selected>Stationary</option></select>
+      </label>
+      <label>Profile: 
+        <select id="Profile"><option value="Mid">Mid</option><option value="Full">Full</option></select>
+      </label>
+      <label>OEM: 
+        <select id="OEM"><option value="FORD">FORD</option><option value="RAM">RAM</option><option value="CHEVY">CHEVY</option></select>
+      </label>
+      <label>Plug Type: 
+        <select id="Plugtype"><option value="5 Way">5 Way</option><option value="7 Way">7 Way</option></select>
+      </label>
+      
+
+      <button onclick="applyChanges()">Generate Model</button>
+      <button id="showSummaryBtn">Summary</button>
+    </div>
+
+    <!-- Forge Viewer -->
+    <div id="forgeViewer">
+  <div id="viewerMessage">
+    Please select the configuration options and click 
+    <b>Generate Model</b> to view the respective model.
+  </div>
+</div>
+
+  <!-- Summary Modal -->
+  <div id="summaryModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeSummary">&times;</span>
+      <h3>Configuration Summary</h3>
+      <div id="summaryContent" style="margin-bottom:15px;"></div>
+       <p style="font-size:14px; color:#555; margin-top:10px;">
+      Please click the below button to send the quote to your email
+    </p>
+      <button id="generateQuoteBtn">Generate Quote</button>
+    </div>
+  </div>
+
+  <script>
+  
+    const URNS = {
+  Sliding: "urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6NXRod2hlZWxfaGl0Y2hfYnVja2V0LzV0aCUyMFdoZWVsJTIwSGl0Y2glMjBTbGlkaW5nLnppcA",
+
+  Stationary: "urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6NXRod2hlZWxfaGl0Y2hfYnVja2V0LzV0aCUyMFdoZWVsJTIwSGl0Y2guemlw"
+};
+ 
+  function getSelectedUrn() {
+  const Type = document.getElementById("Type").value;
+  
+
+  if (Type === "Sliding") {
+    return URNS.Sliding;
+  }
+
+  if (Type === "Stationary") {
+    return URNS.Stationary;
+  }
+
+  return null;
+}
+
+function getSelectedUrn() {
+  const Type = document.getElementById("Type").value;
+ 
+
+  if (Type === "Sliding") {
+    return URNS.Sliding;
+  }
+
+  if (Type === "Stationary") {
+    return URNS.Stationary;
+  }
+
+  return null;
+}
+
+
+
+    window.addEventListener("DOMContentLoaded", function () {
+      const customer = sessionStorage.getItem("customerDetails");
+      if (!customer) {
+        alert("⚠️ Customer details are missing. Please go back and fill the form.");
+        window.location.href = "index.html";
+      }
+    });
+
+    let viewer;
+    const trayDbIds = [10, 11];
+    const baseDims = { width: 1000, height: 2000, depth: 600 };
+
+    async function getForgeToken() {
+      const res = await fetch('/api/token');
+      const data = await res.json();
+      return { accessToken: data.access_token, expiresIn: data.expires_in };
+    }
+
+async function initializeViewer() {
+  const token = await getForgeToken();
+
+  const options = {
+    env: "AutodeskProduction",
+    accessToken: token.accessToken
+  };
+
+  Autodesk.Viewing.Initializer(options, () => {
+    const htmlDiv = document.getElementById("forgeViewer");
+    viewer = new Autodesk.Viewing.GuiViewer3D(htmlDiv);
+    viewer.start();
+    
+    
+  });
+}
+
+
+    function onDocumentLoadSuccess(doc) {
+      const defaultModel = doc.getRoot().getDefaultGeometry();
+      viewer.loadDocumentNode(doc, defaultModel);
+    }
+    function onDocumentLoadFailure(error) {
+      console.error("Document load failed:", error);
+    }
+ 
+
+    function applyChanges() {
+  loadSelectedModel();
+}
+
+     
+ function loadSelectedModel() {
+  const urn = getSelectedUrn();
+
+  if (!urn) {
+    alert("No model available for this selection.");
+    return;
+  }
+
+  viewer.unloadModel(viewer.model);
+  document.getElementById("viewerMessage").style.display = "none";
+
+  Autodesk.Viewing.Document.load(
+    urn,
+    function (doc) {
+      const defaultModel = doc.getRoot().getDefaultGeometry();
+      viewer.loadDocumentNode(doc, defaultModel);
+    },
+    function (err) {
+      console.error("Document load failed:", err);
+    }
+  );
+}
+
+
+
+    // Summary modal logic
+    document.getElementById('showSummaryBtn').addEventListener('click', function () {
+      const customer = JSON.parse(sessionStorage.getItem("customerDetails"));
+      if (!customer) { alert("⚠️ Customer details missing."); return; }
+      window.configuration = {
+    Loadrating: document.getElementById("Loadrating").value,
+        Type: document.getElementById("Type").value,
+        Profile: document.getElementById("Profile").value,
+        OEM: document.getElementById("OEM").value,
+        Plugtype: document.getElementById("Plugtype").value
+  };
+      const configuration = {
+        Loadrating: document.getElementById("Loadrating").value,
+        Type: document.getElementById("Type").value,
+        Profile: document.getElementById("Profile").value,
+        OEM: document.getElementById("OEM").value,
+        Plugtype: document.getElementById("Plugtype").value
+        
+      };
+      let summaryHtml = `
+        <p><strong>Name:</strong> ${customer.name}</p>
+        <p><strong>Email:</strong> ${customer.email}</p>
+        <p><strong>Phone:</strong> ${customer.phone}</p>
+        <p><strong>Dealer:</strong> ${customer.dealer}</p>
+        <p><strong>Load Rating:</strong> ${configuration.Loadrating}</p>
+        <p><strong>Type:</strong> ${configuration.Type}</p>
+        <p><strong>Profile:</strong> ${configuration.Profile}</p>
+        <p><strong>OEM:</strong> ${configuration.OEM}</p>
+        <p><strong>Plug Type:</strong> ${configuration.Plugtype}</p>
+      `;
+      document.getElementById('summaryContent').innerHTML = summaryHtml;
+      document.getElementById('summaryModal').style.display = 'block';
+    });
+
+    document.getElementById('closeSummary').addEventListener('click', function () {
+      document.getElementById('summaryModal').style.display = 'none';
+    });
+
+    window.addEventListener('click', function (event) {
+      if (event.target === document.getElementById('summaryModal')) {
+        document.getElementById('summaryModal').style.display = 'none';
+      }
+    });
+    
+
+    // Send quote from summary
+    document.getElementById('generateQuoteBtn').addEventListener('click', function () {
+      const customerDetails = JSON.parse(sessionStorage.getItem("customerDetails"));
+      const configuration = {
+        Loadrating: document.getElementById("Loadrating").value,
+        Type: document.getElementById("Type").value,
+        Profile: document.getElementById("Profile").value,
+        OEM: document.getElementById("OEM").value,
+        Plugtype: document.getElementById("Plugtype").value
+      };
+      document.getElementById('summaryModal').style.display = 'none';
+      document.getElementById('loadingModal').style.display = 'block';
+      fetch("/api/send-quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ customer: customerDetails, configuration, productType: "5th Wheel Hitches" })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('loadingModal').style.display = 'none';
+        alert("✅ Quote sent!");
+        document.getElementById('summaryModal').style.display = 'none';
+      })
+      .catch(err => {
+        document.getElementById('loadingModal').style.display = 'none';
+        console.error(err);
+        alert("❌ Failed to send quote.");
+      });
+    });
+
+    initializeViewer();
+  </script>
+  <!-- Loading Modal -->
+<div id="loadingModal" class="modal">
+  <div class="modal-content" style="text-align:center;">
+    <p style="font-size:16px; font-weight:bold;">⏳ Please wait a few moments...</p>
+    <p>Your quote is being sent to your email.</p>
+  </div>
+</div>
+
+</body>
+</html>

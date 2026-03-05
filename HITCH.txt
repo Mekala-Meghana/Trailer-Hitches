@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TRAILER HITCHES</title>
+
+  <script src="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/viewer3D.min.js"></script>
+  <link rel="stylesheet" href="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/style.min.css" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f2f4f6;
+    }
+
+    header {
+      background: #2e3338;
+      color: #fff;
+      padding: 12px 20px;
+      font-size: 18px;
+      font-weight: 600;
+      border-bottom: 1px solid #1f2327;
+    }
+
+    #main-container {
+      display: flex;
+      height: calc(100vh - 50px);
+      overflow-y: hidden;
+    }
+
+    /* LEFT COLUMN */
+    #controls {
+      width: 430px;
+      background: #f7f8f9;
+      border-right: 1px solid #cfd3d7;
+      padding: 10px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+  flex-direction: column;
+  height: calc(100vh - 50px);
+    }
+
+    .cpq-panel {
+      background: #ffffff;
+      border: 1px solid #cfd3d7;
+      margin-bottom: 14px;
+      flex-shrink: 0;
+    }
+    .gallery-container {
+  flex: 1;               /* fill remaining space */
+  overflow-y: auto;      /* enable vertical scroll only */
+  overflow-x:hidden;
+}
+
+    .cpq-panel-header {
+      background: #e3e6e9;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      border-bottom: 1px solid #cfd3d7;
+    }
+
+    .cpq-panel-body {
+      padding: 10px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #333;
+    }
+
+    select {
+      width: 100%;
+      padding: 7px;
+      font-size: 13px;
+      border: 1px solid #bfc5cb;
+      border-radius: 3px;
+      margin-top: 4px;
+      background: #fff;
+    }
+
+    button {
+      width: 100%;
+      padding: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #005bbb;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    button:hover {
+      background: #004799;
+    }
+
+    /* IMAGE GALLERY */
+    .gallery {
+      background: #ffffff;
+      border: 1px solid #cfd3d7;
+    }
+
+    .gallery h3 {
+      margin: 0;
+      position: sticky;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #e3e6e9;
+      border-bottom: 1px solid #cfd3d7;
+      top: 0; 
+    }
+
+ /* ===== Reference Images Panel Fix ===== */
+
+.gallery {
+  width: 400px;              /* increase panel width */
+  background: #fff;
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+
+/* Image container */
+#imagePanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;       /* center images */
+}
+
+/* Force image size */
+#imagePanel img {
+  width: 260px;              /* 🔥 THIS is the key */
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 12px;
+  background: #fafafa;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+
+/* Hover effect (professional CPQ look) */
+#imagePanel img:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+    /* RIGHT VIEWER */
+    .viewer {
+      flex: 1;
+      background: #ffffff;
+    }
+
+    #forgeViewer { position: absolute; left: 25%; top:30px; width: 74vw; height: 93vh; margin-top: 30px; border: 1px solid #ccc; }
+
+    /* MODALS (unchanged visually, stabilized) */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #fff;
+      width: 400px;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 4px;
+    }
+
+    .close-btn {
+      float: right;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .image-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-caption {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+  </style>
+</head>
+
+<body>
+
+<header>TRAILER HITCH LOCATIONS</header>
+
+<div id="main-container">
+
+  <!-- LEFT -->
+  <div id="controls">
+
+    <div class="cpq-panel">
+      <div class="cpq-panel-header">PRODUCT OPTIONS</div>
+      <div class="cpq-panel-body">
+
+        <label>Rear Mount
+          <select id="RearMount">
+            <option value="Class 1">Class 1</option>
+            <option value="Class 2">Class 2</option>
+            <option value="Class 3">Class 3</option>
+            <option value="Class 4">Class 4</option>
+            <option value="Class 5" selected>Class 5</option>
+          </select>
+        </label>
+
+        <label>Front Mount
+          <select id="FrontMount">
+            <option value="3000 LB">3000 LB</option>
+            <option value="3500 LB" selected>3500 LB</option>
+            <option value="5000 LB">5000 LB</option>
+          </select>
+        </label>
+
+        <label>Multifit
+          <select id="Multifit">
+            <option value="3500 LB">3500 LB</option>
+            <option value="5000 LB">5000 LB</option>
+            <option value="15000 LB">15000 LB</option>
+          </select>
+        </label>
+
+        <label>Bumper Mount
+          <select id="BumperMount">
+            <option value="3500 LB">3500 LB</option>
+            <option value="5000 LB">5000 LB</option>
+          </select>
+        </label>
+
+        <!-- ORIGINAL BUTTONS -->
+        <button onclick="applyChanges()">Generate Model</button>
+        <button id="showSummaryBtn">Summary</button>
+
+      </div>
+    </div>
+
+    <div class="gallery-container">
+    <div class="gallery">
+      <h3>REFERENCE IMAGES</h3>
+      <div id="imagePanel"></div>
+    </div>
+  </div>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div class="viewer">
+    <div id="forgeViewer"></div>
+  </div>
+
+</div>
+
+  <!-- Summary Modal -->
+  <div id="summaryModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeSummary">&times;</span>
+      <h3>Configuration Summary</h3>
+      <div id="summaryContent" style="margin-bottom:15px;"></div>
+       <p style="font-size:14px; color:#555; margin-top:10px;">
+      Please click the below button to send the quote to your email
+    </p>
+      <button id="generateQuoteBtn">Generate Quote</button>
+    </div>
+  </div>
+
+  <script>
+  /*const trayQuantity = document.getElementById('trayQuantity');
+  const shelfSelect = document.getElementById('shelfSelect');
+
+  document.getElementById('trayQuantity').addEventListener('change', function () {
+    const trayQuantity = parseInt(this.value);
+    const trayVisibility = document.getElementById('shelfSelect');
+
+    if (trayQuantity === 0) {
+        trayVisibility.value = 'hide';
+    } else {
+        trayVisibility.value = 'show';
+    }
+
+});
+
+  document.getElementById('shelfSelect').addEventListener('change', function () {
+    const trayVisibility = this.value;
+    const trayQuantity = document.getElementById('trayQuantity');
+
+    if (trayVisibility === 'hide') {
+        trayQuantity.value = '0';
+    } else if (parseInt(trayQuantity.value) === 0) {
+        trayQuantity.value = '1'; // Default to 1 tray if made visible
+    }
+ 
+});*/
+
+    window.addEventListener("DOMContentLoaded", function () {
+      const customer = sessionStorage.getItem("customerDetails");
+      if (!customer) {
+        alert("⚠️ Customer details are missing. Please go back and fill the form.");
+        window.location.href = "index.html";
+      }
+    });
+
+    let viewer;
+    const trayDbIds = [10, 11];
+    const baseDims = { width: 1000, height: 2000, depth: 600 };
+
+    async function getForgeToken() {
+      const res = await fetch('/api/token');
+      const data = await res.json();
+      return { accessToken: data.access_token, expiresIn: data.expires_in };
+    }
+
+    async function initializeViewer() {
+      const token = await getForgeToken();
+      const options = { env: "AutodeskProduction", accessToken: token.accessToken };
+      Autodesk.Viewing.Initializer(options, () => {
+        const htmlDiv = document.getElementById("forgeViewer");
+        viewer = new Autodesk.Viewing.GuiViewer3D(htmlDiv);
+        viewer.start();
+        viewer.addEventListener(Autodesk.Viewing.VIEWER_INITIALIZED, () => {
+        // Force sizes here
+        resizeForgeViewer(800, 600); // or flex-based dimensions
+    });
+        const urn = 'urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6Zm9vZC1lcXVpcG1lbnRzL1JlZnJpZ2VyYXRlZF9kaXNwbGF5X2Nhc2UxLmlwdA';
+        Autodesk.Viewing.Document.load(urn, onDocumentLoadSuccess, onDocumentLoadFailure);
+      });
+    }
+
+   function onDocumentLoadSuccess(doc) {
+      const defaultModel = doc.getRoot().getDefaultGeometry();
+      viewer.loadDocumentNode(doc, defaultModel).then(() => {
+        viewer.resize();     // 🔥 REQUIRED
+        viewer.fitToView();
+      });
+    }
+
+    function onDocumentLoadFailure(error) {
+      console.error("Document load failed:", error);
+    }
+
+    function applyChanges() {
+      const RearMount= parseInt(document.getElementById("RearMount").value);
+      const FrontMount = parseInt(document.getElementById("FrontMount").value);
+      const Multifit = parseInt(document.getElementById("Multifit").value);
+      const BumperMount = parseInt(document.getElementById("BumperMount").value);
+      
+
+      const baseWidth = 30, baseHeight = 72, baseDepth = 24;
+      const scaleX = width / baseWidth;
+      const scaleY = height / baseHeight;
+      const scaleZ = depth / baseDepth;
+      const traySpacingMeters = trayHeightInches * 0.0254;
+
+      const targetDbIds = [3, 4, 5, 6, 7, 8, 9, 10, 11];
+      targetDbIds.forEach(dbId => {
+        viewer.getObjectTree(tree => {
+          tree.enumNodeFragments(dbId, fragId => {
+            const fragProxy = viewer.impl.getFragmentProxy(viewer.model, fragId);
+            fragProxy.getAnimTransform();
+            fragProxy.scale = new THREE.Vector3(scaleX, scaleY, scaleZ);
+            fragProxy.position = new THREE.Vector3(0, 0, 0);
+            if (trayQuantity === 2 && dbId === 11) fragProxy.position.y = traySpacingMeters;
+            fragProxy.updateAnimTransform();
+          });
+        });
+      });
+
+      if (trayQuantity === 1) {
+        viewer.show(10);
+        viewer.hide(11);
+      } else {
+        viewer.show(10);
+        viewer.show(11);
+      }
+      toggleShelf();
+    }
+
+    function toggleShelf() {
+  const action = document.getElementById("shelfSelect").value;
+  const trayQuantity = parseInt(document.getElementById("trayQuantity").value);
+
+  if (action === "hide" || trayQuantity === 0) {
+    // Hide all trays
+    trayDbIds.forEach(dbId => viewer.hide(dbId));
+  } else {
+    // Show trays only up to trayQuantity
+    trayDbIds.forEach((dbId, index) => {
+      if (index < trayQuantity) {
+        viewer.show(dbId);
+      } else {
+        viewer.hide(dbId);
+      }
+    });
+  }
+}
+
+
+    // Summary modal logic
+    document.getElementById('showSummaryBtn').addEventListener('click', function () {
+      const customer = JSON.parse(sessionStorage.getItem("customerDetails"));
+      if (!customer) { alert("⚠️ Customer details missing."); return; }
+      const configuration = {
+        RearMount: document.getElementById("RearMount").value,
+        FrontMount: document.getElementById("FrontMount").value,
+        Multifit: document.getElementById("Multifit").value,
+        BumperMount: document.getElementById("BumperMount").value,
+        
+      };
+      let summaryHtml = `
+        <p><strong>Name:</strong> ${customer.name}</p>
+        <p><strong>Email:</strong> ${customer.email}</p>
+        <p><strong>Phone:</strong> ${customer.phone}</p>
+        <p><strong>Dealer:</strong> ${customer.dealer}</p>
+        <p><strong>Rear Mount:</strong> ${configuration.RearMount}</p>
+        <p><strong>Front Mount:</strong> ${configuration.FrontMount}</p>
+        <p><strong>Multifit:</strong> ${configuration.Multifit}</p>
+        <p><strong>Bumper Mount:</strong> ${configuration.BumperMount}</p>
+        
+      `;
+      document.getElementById('summaryContent').innerHTML = summaryHtml;
+      document.getElementById('summaryModal').style.display = 'block';
+    });
+
+    document.getElementById('closeSummary').addEventListener('click', function () {
+      document.getElementById('summaryModal').style.display = 'none';
+    });
+
+    window.addEventListener('click', function (event) {
+      if (event.target === document.getElementById('summaryModal')) {
+        document.getElementById('summaryModal').style.display = 'none';
+      }
+    });
+    
+
+    // Send quote from summary
+    document.getElementById('generateQuoteBtn').addEventListener('click', function () {
+      const customerDetails = JSON.parse(sessionStorage.getItem("customerDetails"));
+      const configuration = {
+        RearMount: document.getElementById("RearMount").value,
+        FrontMount: document.getElementById("FrontMount").value,
+        Multifit: document.getElementById("Multifit").value,
+        BumperMount: document.getElementById("BumperMount").value,
+        
+      };
+      document.getElementById('summaryModal').style.display = 'none';
+      document.getElementById('loadingModal').style.display = 'block';
+      fetch("/api/send-quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ customer: customerDetails, configuration, productType: "Trailer Hitches" })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('loadingModal').style.display = 'none';
+        alert("✅ Quote sent!");
+        document.getElementById('summaryModal').style.display = 'none';
+      })
+      .catch(err => {
+        document.getElementById('loadingModal').style.display = 'none';
+        console.error(err);
+        alert("❌ Failed to send quote.");
+      });
+    });
+
+    initializeViewer();
+    window.addEventListener("resize", () => {
+      if (viewer) {
+        viewer.resize();
+        viewer.fitToView();
+      }
+    });
+
+        
+    /* ---------- Rear Mount Images ---------- */
+
+    const rearMountImages = {
+      "Class 1": [
+        "/images/Rear Mount class 1.PNG"
+      ],
+      "Class 2": [
+        "/images/Rear Mount class 2.PNG"
+      ],
+      "Class 3": [
+        "/images/Rear Mount class 3.PNG"
+      ],
+      "Class 4": [
+        "/images/Rear Mount class 4.PNG"
+      ],
+      "Class 5": [
+        "/images/Rear Mount class 5.PNG"
+      ]
+    };
+
+    /* ---------- Front Mount Images ---------- */
+
+    const frontMountImages = {
+      "3000 LB": [
+        "/images/Front Mount 3000LB.PNG"
+      ],
+      "3500 LB": [
+        "/images/Front Mount 3500LB.PNG"
+      ],
+      "5000 LB": [
+        "/images/Front Mount 5000LB.PNG"
+      ],
+    };
+
+     /* ---------- Multifit Images ---------- */
+
+    const multifitImages = {
+      "3500 LB": [
+        "/images/Multifit 3500LB.PNG"
+      ],
+      "5000 LB": [
+        "/images/Multifit 5000LB.PNG"
+      ],
+      "15000 LB": [
+        "/images/Multifit 15000LB.PNG"
+      ],
+    };
+
+    /* ---------- Bumper Mount Images ---------- */
+
+    const bumperMountImages = {
+      "3500 LB": [
+        "/images/Bumper Mount 3500LB.PNG"
+      ],
+      "5000 LB": [
+        "/images/Bumper Mount 5000LB.PNG"
+      ],
+      
+    };
+
+  function loadReferenceImages() {
+  const imagePanel = document.getElementById("imagePanel");
+  imagePanel.innerHTML = "";
+
+  // Rear Mount
+  const rearClass = document.getElementById("RearMount").value;
+  rearMountImages[rearClass].forEach(src => appendImage(src, `Rear Mount – ${rearClass}`));
+
+  // Front Mount
+  const frontClass = document.getElementById("FrontMount").value;
+  frontMountImages[frontClass].forEach(src => appendImage(src, `Front Mount – ${frontClass}`));
+
+  // Multifit
+  const multifitClass = document.getElementById("Multifit").value;
+  multifitImages[multifitClass].forEach(src => appendImage(src, `Multifit – ${multifitClass}`));
+
+  // Bumper Mount
+  const bumperClass = document.getElementById("BumperMount").value;
+  bumperMountImages[bumperClass].forEach(src => appendImage(src, `Bumper Mount – ${bumperClass}`));
+}
+
+function appendImage(src, captionText) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "image-wrapper";
+
+  const img = document.createElement("img");
+  img.src = src;
+  img.alt = captionText;
+  img.onclick = () => openImage(img);
+
+  const caption = document.createElement("div");
+  caption.className = "image-caption";
+  caption.innerText = captionText;
+
+  wrapper.appendChild(img);
+  wrapper.appendChild(caption);
+  document.getElementById("imagePanel").appendChild(wrapper);
+}
+
+
+
+    /* Load images on page load */
+    document.addEventListener("DOMContentLoaded", loadReferenceImages);
+
+    /* Reload images when Rear Mount changes */
+    document.getElementById("RearMount").addEventListener("change", loadReferenceImages);
+    document.getElementById("FrontMount").addEventListener("change", loadReferenceImages);
+    document.getElementById("Multifit").addEventListener("change", loadReferenceImages);
+    document.getElementById("BumperMount").addEventListener("change", loadReferenceImages);
+
+    /* Simple zoom */
+    function openImage(img) {
+      const win = window.open("");
+      win.document.write(`<img src="${img.src}" style="width:100%">`);
+    }
+    
+  </script>
+  <!-- Loading Modal -->
+<div id="loadingModal" class="modal">
+  <div class="modal-content" style="text-align:center;">
+    <p style="font-size:16px; font-weight:bold;">⏳ Please wait a few moments...</p>
+    <p>Your quote is being sent to your email.</p>
+  </div>
+</div>
+
+</body>
+</html>

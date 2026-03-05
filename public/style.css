@@ -1,0 +1,436 @@
+* {
+    margin: 0;
+    padding: 0;
+    
+}
+
+.header {
+    height: 109vh;  
+    background: linear-gradient(to top, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.5) 50%), url(curt.jpg);
+    background-position: center;
+    background-size: cover;
+    position: relative;
+}
+nav ul {
+    position: fixed;
+    top: 30px;
+    left: -20px;
+    width: 100%;
+}
+nav{
+    display:flex;
+    padding:2% 6%;
+    justify-content:space-between;
+    align-items:center;
+
+}
+nav img{
+    width:150px;
+    margin-left:-70px;
+    margin-top:-20px;
+}
+.nav-links{
+    flex:1;
+    text-align:right;
+}
+    .nav-links ul li {
+        list-style: none;
+        display: inline-block;
+        padding: 8px 12px;
+        position: relative;
+        border: 1px solid #e7e7e7;
+        background-color: #777;
+    }
+.nav-links ul li a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 20px;
+        
+        
+}
+.nav-links ul li::after{
+    content:'';
+    width:0%;
+    height:2px;
+    background:#00509e;
+    display:block;
+    margin:auto;
+    transition:0.5s;
+
+}
+.nav-links ul li:hover::after{
+    width:100%;
+}
+
+
+
+
+.text-box{
+    width:90%;
+    color:#ffffff;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+}
+.text-box h1{
+    font-size:62px;
+}
+.text-box p{
+    margin:10px 0 40px;
+    font-size:20px;
+    color:#ffffff;
+}
+.hero-btn{
+    display:inline-block;
+    text-decoration:none;
+    color:#ffffff;
+    border:1px solid #ffffff;
+    padding:12px 34px;
+    font-size:17px;
+    background:transparent;
+    position:relative;
+    cursor:pointer;
+}
+.hero-btn:hover{
+    border:1px solid #00509e;
+    background:#00509e;
+    transition:1s;
+
+}
+nav .fa{
+    display:none;
+}
+
+@media(max-width:700px){
+    .text-box h1 {
+        font-size: 20px;
+    }
+    .nav-links ul li{
+        display:block;
+    }
+    .nav-links{
+        position:absolute;
+        background:#f44336;
+        height:100vh;
+        width:200px;
+        top:0;
+        right:-200px;
+        text-align:left;
+        z-index:2;
+        transition:1s;
+    }
+    nav .fa{
+        display:block;
+        color:#ffffff;
+        margin:10px;
+        font-size:22px;
+        cursor:pointer;
+    }
+    .nav-link ul{
+        padding:30px;
+    }
+}
+/*------customer details-----*/
+.CustomerDetails{
+    width:80%;
+    margin:auto;
+    text-align:center;
+    padding-top:100px;
+}
+h1{
+    font-size:36px;
+    font-weight:600;
+}
+p{
+    color:#777;
+    font-size:14px;
+    font-weight:300;
+    line-height:22px;
+    padding:10px;
+}
+.form {
+    width: 250px;
+    height: auto;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8) 50%);
+    border-radius: 10px;
+    padding: 25px;
+    margin: 30px auto; /* Center it */
+}
+
+
+    .form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #ffffff;
+        
+    }
+
+    .form input[type="text"],
+    .form input[type="email"],
+    .form input[type="tel"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    .form button[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #00509e;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .form input[type="submit"]:hover {
+            background-color: #0026ff;
+        }
+@media (max-width: 700px) {
+    .form {
+        position: static;
+        width: 90%;
+        height: auto;
+        margin: 20px auto;
+        left: 0;
+        top: 0;
+        padding: 20px;
+    }
+}
+
+/*------Food Equipments-----*/
+.Equip{
+    width:80%;
+    margin:auto;
+    text-align:center;
+    padding-top:50px;
+    
+}
+.row {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.Equip-col {
+    flex: 1 1 22%; /* Each takes ~22% width with spacing */
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    min-width: 200px;
+}
+
+    .Equip-col img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 10px;
+    }
+
+.layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    transition: 0.5s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .layer h3 {
+        color: #fff;
+        font-size: 18px;
+        background-color: rgba(0, 0, 0, 0.6);
+        padding: 8px 16px;
+        border-radius: 5px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+.Equip-col:hover .layer {
+    background: rgba(255, 0, 0, 0.2);
+}
+
+    .Equip-col:hover .layer h3 {
+        opacity: 1;
+    }
+
+/* Responsive: stack in 2 or 1 columns */
+@media (max-width: 900px) {
+    .Equip-col {
+        flex: 1 1 45%; /* 2 per row */
+    }
+}
+
+@media (max-width: 600px) {
+    .Equip-col {
+        flex: 1 1 100%; /* 1 per row */
+    }
+}
+
+
+/*------Refridgerated display-----*/
+.header1 {
+    height: 109vh;
+    background: url('rd.jpg') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    padding-top: 100px;
+}
+
+
+h2 {
+    font-size: 36px;
+    font-weight: 600;
+    color: #f44336;
+    background-color: #ffffff;
+    position: relative;
+    border: 1px solid #e7e7e7;
+    display: inline-block;
+    padding: 10px 20px;
+    max-width: 90%;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.form1 {
+    width: 300px;
+    background: rgba(0, 0, 0, 0.7); /* Simpler semi-transparent dark background */
+    border-radius: 10px;
+    padding: 30px;
+    margin: 30px auto;
+    color: white;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+    .form1 label {
+        display:block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #ffffff;
+    }
+
+    .form1 select {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width:100%;
+        box-sizing:border-box;
+    }
+
+        /* Optional: Add a hover effect on dropdowns */
+        .form1 select:hover {
+            border-color: #0077cc;
+            background-color: #f0f8ff;
+        }
+    
+
+
+.form1 input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff6a00;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .form1 input[type="submit"]:hover {
+        background-color: #f44336;
+    }
+
+@media (max-width: 700px) {
+    .form1 {
+        position: static;
+        width: 90%;
+        height: auto;
+        margin: 20px auto;
+        left: 0;
+        top: 0;
+        padding: 20px;
+    }
+}
+
+/* LEFT: Controls */
+#controls { width: 300px; background-color: #fff; padding: 90px; box-shadow: 2px 0 8px rgba(0,0,0,0.1); overflow-y: auto; }
+
+/* MIDDLE: Images */
+.gallery {
+  width: 280px;
+  background: #fafafa;
+  padding: 15px;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+  height: 100%;
+}
+
+
+.gallery h3 {
+    font-size: 16px;
+    color: #003366;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Image grid */
+#imagePanel {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+#imagePanel img {
+    width: 100%;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#imagePanel img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    #main-container {
+        flex-direction: column;
+    }
+
+    #controls,
+    .gallery {
+        width: 100%;
+        min-width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .viewer {
+        padding: 10px;
+    }
+
+}
+html, body {
+  overflow-x: hidden;
+}
