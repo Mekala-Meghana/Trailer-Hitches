@@ -464,15 +464,15 @@ appendCustomerLog(customer, quoteNo, productType);
 
     const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
   },
-  connectionTimeout: 60000,
-  greetingTimeout: 30000,
-  socketTimeout: 60000
+  tls: {
+    rejectUnauthorized: false
+  }
 });
    
     console.log("Email User:", process.env.EMAIL_USER);
