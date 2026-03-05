@@ -365,13 +365,7 @@ else if (productType === 'Towing Accessories') {
   
   return await workbook.xlsx.writeBuffer();
 }
-const logFilePath = path.join(
-  'C:',
-  'Users',
-  'DESKTOP-25',
-  'Desktop',
-  'Towing & Hitches CustomerLog.xlsx'
-);
+const logFilePath = path.join(__dirname, 'CustomerLog.xlsx');
 
 
 function appendCustomerLog(customer,quoteNo,productType) {
@@ -475,7 +469,9 @@ await appendCustomerLog(customer, quoteNo, productType);
         pass: process.env.EMAIL_PASS
       }
     });
-
+   
+    console.log("Email User:", process.env.EMAIL_USER);
+console.log("Email Pass Loaded:", process.env.EMAIL_PASS ? "Yes" : "No");
    await transporter.sendMail({
   from: `"Towing & Hitches Configurator" <${process.env.EMAIL_USER}>`,
   to: customer.email,
