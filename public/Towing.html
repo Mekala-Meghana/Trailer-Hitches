@@ -251,7 +251,15 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ customer: customerDetails, configuration, productType: "Towing Accessories" })
       })
-      .then(res => res.json())
+      .then(async res => {
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error("Server Error: " + text);
+  }
+
+  return res.json();
+})
       .then(data => {
         document.getElementById('loadingModal').style.display = 'none';
         alert("✅ Quote sent!");

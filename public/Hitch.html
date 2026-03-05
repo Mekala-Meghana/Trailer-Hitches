@@ -317,7 +317,15 @@ async function initializeViewer() {
   })
 })
 
-      .then(res => res.json())
+      .then(async res => {
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error("Server Error: " + text);
+  }
+
+  return res.json();
+})
       .then(data => {
         document.getElementById('loadingModal').style.display = 'none';
         alert("✅ Quote sent!");
