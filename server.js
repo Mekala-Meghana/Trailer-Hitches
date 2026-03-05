@@ -452,7 +452,7 @@ app.post('/api/send-quote', async (req, res) => {
 
     // ✅ Save to log after values are ready
     // ✅ Save to log after values are ready
-await appendCustomerLog(customer, quoteNo, productType);
+appendCustomerLog(customer, quoteNo, productType);
 
 
     const excelBuffer = await updateExcelWithNamedCells({
@@ -470,7 +470,9 @@ await appendCustomerLog(customer, quoteNo, productType);
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
   },
-  connectionTimeout: 10000
+  connectionTimeout: 60000,
+  greetingTimeout: 30000,
+  socketTimeout: 60000
 });
    
     console.log("Email User:", process.env.EMAIL_USER);
