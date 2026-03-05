@@ -463,12 +463,15 @@ await appendCustomerLog(customer, quoteNo, productType);
     });
 
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
-    });
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  },
+  connectionTimeout: 10000
+});
    
     console.log("Email User:", process.env.EMAIL_USER);
 console.log("Email Pass Loaded:", process.env.EMAIL_PASS ? "Yes" : "No");
