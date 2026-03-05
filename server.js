@@ -41,7 +41,8 @@ app.get('/api/token', async (req, res) => {
 });
 
 const bodyParser = require('body-parser');
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Middleware to parse JSON body
 app.use(bodyParser.json());
@@ -462,56 +463,42 @@ appendCustomerLog(customer, quoteNo, productType);
       quoteNo,
     });
 
-    const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
-   
-    console.log("Email User:", process.env.EMAIL_USER);
-console.log("Email Pass Loaded:", process.env.EMAIL_PASS ? "Yes" : "No");
-   await transporter.sendMail({
-  from: `"Towing & Hitches Configurator" <${process.env.EMAIL_USER}>`,
+ const msg = {
   to: customer.email,
-  subject: 'Your Equipment Quote',
+  from: {
+    email: process.env.EMAIL_USER,
+    name: "Towing & Hitches Configurator"
+  },
+  subject: "Your Equipment Quote",
   html: `
-    <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; line-height: 1.5;">
-      <h2 style="color:#2c3e50;">Hello ${customer.name},</h2>
+  <div style="font-family: Arial; padding:20px;">
+    <h2>Hello ${customer.name},</h2>
 
-      <p>Thank you for configuring your <strong>${productType}</strong> with us.</p>
+    <p>Thank you for configuring your <b>${productType}</b>.</p>
 
-      <p><strong>Quote No:</strong> ${quoteNo}</p>
-      <p>Please find your detailed quote attached to this email.</p>
+    <p><b>Quote No:</b> ${quoteNo}</p>
 
-      <p>Our team will get in touch with you shortly to discuss the next steps.</p>
+    <p>Please find your quote attached.</p>
 
-      <hr style="margin: 30px 0; border: none; border-top: 1px solid #ccc;">
+    <hr/>
 
-      <div style="text-align: center;">
-        <p style="font-size: 12px; color: #777;">
-          Jaydu, Inc.<br/>
-          5th Floor, 504 A, PSR Prime Towers, DLF Rd, Gachibowli, Hyderabad, Telangana 500032, India<br/>
-          Contact Us:  +91 -40-48577800
-        </p>
-        <img src="cid:companylogo" alt="Company Logo" style="max-height: 60px; margin-top: 10px;"/>
-      </div>
-    </div>
+    <p style="font-size:12px;color:#777">
+      Jaydu Inc<br>
+      Hyderabad, India
+    </p>
+  </div>
   `,
   attachments: [
     {
+      content: excelBuffer.toString("base64"),
       filename: `Quote(${quoteNo}).xlsx`,
-      content: excelBuffer,
-      contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    },
-    {
-      filename: 'logo.png',
-      path: path.join(__dirname, 'public/logo.png'),
-      cid: 'companylogo'
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      disposition: "attachment"
     }
   ]
-});
+};
+
+await sgMail.send(msg);
 
 res.json({ message: 'Email sent successfully with Excel attachment' });
 
